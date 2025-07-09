@@ -1,0 +1,30 @@
+Proiect: Chatbot Inteligent pentru Colectare Date (React, Python, OpenAI, Playwright)
+
+Acest document detaliază arhitectura, componentele, codul, setările și pașii de deployment 
+pentru un chatbot care colectează informații (nume companie, categorie, servicii) prin discuție liberă și automatizează 
+introducerea acestora într-un formular web Podio folosind OpenAI și Playwright, cu frontend în React.js și backend în Python 
+(FastAPI).
+
+1. Arhitectura Generală a Proiectului
+
+Proiectul este împărțit în două părți principale, frontend și backend, care comunică prin API-uri. Automatizarea browserului
+este o funcționalitate a backend-ului.
+
+Frontend (React.js):
+- Interfața cu utilizatorul (UI) a chatbot-ului.
+- Rulează în browserul utilizatorului.
+- Comunică cu backend-ul prin cereri HTTP (API REST).
+- Va fi lansat ca fișiere statice în Google Cloud Storage sau Firebase Hosting.
+
+Backend (Python - FastAPI):
+- Punctul central de procesare.
+- Expune API-uri REST către frontend.
+- Creierul inteligent: Utilizează OpenAI pentru:
+  - Extragerea informațiilor esențiale (nume companie, categorie, servicii) din discuția liberă.
+  - Standardizarea acestor informații.
+  - Determinarea stării conversației și generarea răspunsurilor inteligente.
+  - Controlul automatizării browserului (computer-use-preview).
+- Automatizare: Utilizează Playwright pentru a interacționa cu formularul web Podio.
+- Va fi lansat ca un container Docker în Google Cloud Run.
+- OpenAI API: Serviciu extern furnizat de OpenAI pentru inteligența artificială (LLM-uri).
+- Playwright: Biblioteca Python pentru automatizarea browserului headless (Chromium) pe backend.

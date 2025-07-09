@@ -1,0 +1,25 @@
+2. Structura proiectului
+
+Proiectul va avea două directoare principale la nivelul rădăcinii, backend și frontend.
+
+.
+├── backend/
+│   ├── app.py                      # Aplicația FastAPI (API principal)
+│   ├── chatbot_logic.py            # Logica inteligentă a chatbot-ului (extracție, decizii, răspunsuri)
+│   ├── llm_utils.py                # Funcții ajutătoare pentru LLM (standardizare)
+│   ├── playwright_automation.py    # Codul pentru automatizarea browserului cu Playwright
+│   ├── .env                        # Fișier pentru variabilele de mediu locale (NU se uploadează în cloud!)
+│   ├── requirements.txt            # Dependențe Python
+│   └── Dockerfile                  # Instrucțiuni pentru a construi imaginea Docker a backend-ului
+└── frontend/
+    ├── public/                     # Fișiere statice (index.html, favicon etc.)
+    ├── src/                        # Codul sursă React
+    │   ├── App.js                  # Componenta principală React
+    │   ├── ChatWindow.js           # Afișează mesajele de chat
+    │   ├── Message.js              # Componentă pentru un singur mesaj
+    │   ├── InputBar.js             # Input text și butoane
+    │   ├── StatusBar.js            # Afișează statusul curent
+    │   ├── api.js                  # Funcții de interacțiune cu backend API
+    │   ├── index.js                # Punctul de intrare React
+    │   └── App.css / index.css     # Stiluri CSS
+    └── package.json                # Dependențe Node.js și scripturi pentru frontend

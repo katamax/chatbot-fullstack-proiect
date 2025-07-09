@@ -1,0 +1,17 @@
+# Backend specific ignores
+
+# Ignoră mediul virtual Python
+# Schimbă `chatbot-env` dacă al tău se numește altfel (ex: venv)
+/backend/chatbot-env/
+/backend/venv/
+
+# Ignoră fișierele .env care conțin secrete
+# Asteriscul (*) face ca orice fișier care se termină cu .env să fie ignorat
+*.env
+
+# Ignoră fișierele cache și compilate Python
+__pycache__/
+*.pyc
+
+# Ignoră fișierele generate de VS Code
+.vscode/

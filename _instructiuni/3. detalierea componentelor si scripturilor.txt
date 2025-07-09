@@ -1,0 +1,142 @@
+3. Detalierea Componentelor și Scripturilor
+
+3.1. Backend (Python - FastAPI)
+Rolul Directorului backend:
+Conține toată logica serverului, interacțiunea cu AI și automatizarea browserului. Va fi containerizat și lansat în 
+Cloud Run.
+
+3.1.1. backend/requirements.txt
+Acest fișier listează toate bibliotecile Python necesare pentru backend.
+
+# backend/requirements.txt
+
+# Framework web pentru API-uri. FastAPI este rapid, modern și ușor de utilizat.
+fastapi
+# Server ASGI (Asynchronous Server Gateway Interface) pentru a rula aplicația FastAPI.
+# Este necesar pentru rularea în producție și în medii Docker.
+uvicorn
+# Biblioteca oficială OpenAI Python. Permite interacțiunea cu diverse modele OpenAI.
+openai
+# Biblioteca pentru automatizarea browserului. Permite controlul programatic al browserelor.
+playwright
+# Pentru a încărca variabilele de mediu dintr-un fișier .env în mediul de dezvoltare local.
+python-dotenv
+# O bibliotecă pentru primitive de concurență asincronă, inclusiv to_thread.run_sync,
+# care permite rularea funcțiilor blocate I/O (cum ar fi apelurile OpenAI API, Playwright)
+# într-un thread separat, fără a bloca event loop-ul asincron al FastAPI.
+anyio
+
+1. Instalare Biblioteci Python:
+Creează un mediu virtual: În directorul backend, deschide terminalul și rulează:
+                python -m venv venv
+
+2. Activează mediul virtual:
+
+Windows (Command Prompt): .\venv\Scripts\activate.bat
+Windows (PowerShell): .\venv\Scripts\Activate.ps1
+macOS / Linux (Bash / Zsh): source venv/bin/activate
+
+3. Instalează dependențele:
+                pip install -r requirements.txt
+
+4. Instalează driverele Playwright (browserele):
+                playwright install
+
+
+3.1.2. backend/.env
+Acest fișier stochează cheia ta API OpenAI. Este folosit DOAR pentru dezvoltarea locală și 
+NU trebuie încărcat în Git sau deployat în Cloud!
+
+# backend/.env
+
+# Cheia ta API OpenAI. O vei obține de pe platforma OpenAI.
+# Asigură-te că începe cu "sk-"
+OPENAI_API_KEY="sk-YOUR_OPENAI_API_KEY_HERE"
+
+3.1.3. backend/playwright_automation.py
+Rol: Acest script conține toată logica pentru interacțiunea cu browserul, automatizând acțiunile 
+pe baza instrucțiunilor primite de la modelul OpenAI computer-use-preview.
+                # backend/playwright_automation.py
+
+3.1.4. backend/llm_utils.py
+Rol: Acest script conține funcții ajutătoare care utilizează modele OpenAI mai mici și mai specifice 
+pentru a standardiza datele extrase în format liber, asigurându-se că se potrivesc cu opțiunile predefinite.
+                # backend/llm_utils.py
+
+3.1.5. backend/chatbot_logic.py
+Rol: Acesta este "creierul" conversațional al chatbot-ului. Gestionază starea conversației, coordonează extragerea 
+datelor folosind LLM-uri, generează răspunsurile asistentului și declanșează automatizarea Playwright atunci când toate 
+informațiile sunt colectate și confirmate. Implementează logica de discuție liberă.
+                # backend/chatbot_logic.py
+
+3.1.6. backend/app.py
+Rol: Fișierul principal al aplicației FastAPI. Configurează serverul, rutele API, și inițializează clientul OpenAI. Este 
+punctul de intrare pentru serverul Uvicorn.
+              # backend/app.py
+
+3.1.7. backend/Dockerfile
+Rol: Definește pașii pentru a construi o imagine Docker a aplicației tale FastAPI. Această imagine va fi lansata în 
+Cloud Run.
+                # backend/Dockerfile
+
+
+3.2. Frontend (React.js)
+Rolul Directorului frontend:
+Conține codul sursă al interfeței cu utilizatorul (UI) construită cu React. Va fi compilată în fișiere statice și lansata 
+într-un serviciu de hosting static.
+
+3.2.1. frontend/package.json
+Acest fișier definește dependențele Node.js/npm și scripturile de rulare pentru proiectul React.
+            # frontend/package.json
+
+Instalare Biblioteci Node.js/npm:
+1. Navighează la directorul frontend:
+                cd your_project_root/frontend
+
+2. Șterge directorul node_modules și fișierul package-lock.json (dacă există și ai avut probleme anterioare):
+- Windows (PowerShell): Remove-Item -Recurse -Force node_modules ; Remove-Item package-lock.json
+- macOS / Linux (Bash / Zsh): rm -rf node_modules ; rm package.lock.json
+
+3. Curăță cache-ul npm (opțional, dar recomandat în caz de probleme):
+                npm cache clean --force
+
+4. Instalează dependențele:
+                npm install
+
+
+3.2.2. frontend/src/api.js
+Rol: Centralizează apelurile HTTP către backend, făcând mai ușoară gestionarea URL-ului API și a logicii de 
+trimitere a datelor.
+                # frontend/api.js
+
+3.2.3. frontend/src/ChatWindow.js
+Rol: Componentă React responsabilă pentru afișarea tuturor mesajelor din istoricul chat-ului.
+                # frontend/src/ChatWindow.js
+
+3.2.4. frontend/src/Message.js
+Rol: Componentă React simplă care afișează o singură "bulă" de mesaj, stilizată diferit în funcție de rolul 
+(utilizator sau asistent).
+                # frontend/src/Message.js
+
+3.2.5. frontend/src/InputBar.js
+Rol: Componentă React care conține câmpul de intrare pentru text și butoanele de "Trimite" și "Șterge & Reîncepe". 
+Gestionează stările de activare/dezactivare.
+                # frontend/src/InputBar.js
+
+3.2.6. frontend/src/StatusBar.js
+Rol: Componentă React simplă care afișează un mesaj de status în partea de jos a ferestrei de chat, oferind 
+feedback utilizatorului.
+                # frontend/src/StatusBar.js
+
+3.2.7. frontend/src/App.js
+Rol: Componenta principală a aplicației React. Gestionează toate stările globale ale aplicației (mesaje, starea 
+conversației, starea de încărcare), orchestrează comunicarea cu backend-ul și randează toate celelalte componente UI.
+                # frontend/src/App.js
+
+3.2.8. frontend/src/App.css
+Rol: Conține stilurile CSS pentru întreaga aplicație React, oferind un aspect curat și funcțional.
+                # frontend/src/App.css
+
+3.2.9. frontend/src/index.js
+Rol: Punctul de intrare principal al aplicației React, care randează componenta App în DOM.
+                # frontend/src/index.js

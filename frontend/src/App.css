@@ -1,0 +1,148 @@
+/* frontend/src/App.css */
+
+/* Stiluri generale pentru body */
+body {
+  font-family: 'Arial', sans-serif; /* Font generic, ușor de citit */
+  background-color: #f0f2f5; /* Culoare de fundal deschisă */
+  margin: 0; /* Fără margini exterioare */
+  display: flex; /* Folosim flexbox pentru a centra conținutul */
+  justify-content: center; /* Centrează orizontal */
+  align-items: center; /* Centrează vertical */
+  min-height: 100vh; /* Ocupă întreaga înălțime a viewport-ului */
+  color: #333; /* Culoarea textului de bază */
+}
+
+/* Containerul principal al aplicației */
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* Ocupă întreaga lățime disponibilă */
+}
+
+/* Containerul principal al chat-ului */
+.chat-container {
+  background-color: #fff; /* Fundal alb */
+  border-radius: 10px; /* Colțuri rotunjite */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Umbră subtilă */
+  width: 90%; /* Lățime relativă */
+  max-width: 600px; /* Lățime maximă pentru a nu deveni prea lat pe ecrane mari */
+  display: flex;
+  flex-direction: column; /* Elemente aranjate vertical */
+  height: 80vh; /* Înălțime fixă pentru o experiență consistentă */
+  min-height: 500px; /* Înălțime minimă */
+  overflow: hidden; /* Ascunde conținutul care depășește granițele */
+  margin: 20px; /* Margine în jurul containerului */
+}
+
+/* Stil pentru titlul chat-ului */
+h1 {
+  background-color: #007bff; /* Albastru primar */
+  color: white; /* Text alb */
+  padding: 15px; /* Spațiere internă */
+  margin: 0; /* Fără margini exterioare */
+  border-top-left-radius: 10px; /* Colțuri rotunjite doar sus */
+  border-top-right-radius: 10px;
+  font-size: 1.5em; /* Dimensiune text */
+  text-align: center; /* Centrare text */
+}
+
+/* Fereastra principală de chat unde apar mesajele */
+.chat-window {
+  flex-grow: 1; /* Permite ferestrei de chat să ocupe tot spațiul vertical disponibil */
+  padding: 15px; /* Spațiere internă */
+  overflow-y: auto; /* Permite scroll vertical dacă mesajele depășesc înălțimea */
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Spațiu între bulele de chat */
+}
+
+/* Stil de bază pentru fiecare bulă de mesaj */
+.message-bubble {
+  padding: 10px 15px; /* Spațiere internă */
+  border-radius: 20px; /* Colțuri foarte rotunjite */
+  max-width: 80%; /* Lățime maximă a bulei */
+  word-wrap: break-word; /* Asigură că textul lung se încadrează în bulă */
+  line-height: 1.4; /* Înălțimea liniei pentru lizibilitate */
+}
+
+/* Stil specific pentru mesajele trimise de utilizator */
+.user-message {
+  align-self: flex-end; /* Aliniază bula la dreapta */
+  background-color: #DCF8C6; /* Verde deschis (similar cu aplicațiile de chat) */
+  color: #333;
+  border-bottom-right-radius: 5px; /* Colț mai puțin rotunjit la bază, pentru un aspect "gânditor" */
+}
+
+/* Stil specific pentru mesajele trimise de asistent */
+.assistant-message {
+  align-self: flex-start; /* Aliniază bula la stânga */
+  background-color: #E0E0E0; /* Gri deschis */
+  color: #333;
+  border-bottom-left-radius: 5px; /* Colț mai puțin rotunjit la bază */
+}
+
+/* Bara de status de sub fereastra de chat */
+.status-bar {
+  background-color: #e9ecef; /* Gri foarte deschis */
+  padding: 10px 15px;
+  border-top: 1px solid #dee2e6; /* Linie subțire de separare */
+  font-size: 0.9em; /* Text mai mic */
+  color: #555; /* Gri închis */
+  text-align: center;
+}
+
+/* Bara de input unde utilizatorul tastează mesajele */
+.input-bar {
+  display: flex;
+  flex-direction: column; /* Elemente aranjate vertical */
+  padding: 15px;
+  border-top: 1px solid #dee2e6; /* Linie subțire de separare */
+  gap: 10px; /* Spațiu între textarea și butoane */
+}
+
+/* Câmpul de text pentru input */
+.input-bar textarea {
+  width: calc(100% - 20px); /* Ocupă toată lățimea, minus padding */
+  padding: 10px;
+  border: 1px solid #ced4da; /* Bordură subțire gri */
+  border-radius: 5px; /* Colțuri rotunjite */
+  resize: vertical; /* Permite redimensionarea pe verticală */
+  min-height: 40px; /* Înălțime minimă */
+  font-size: 1em; /* Dimensiune text normală */
+}
+
+/* Container pentru butoanele din bara de input */
+.input-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end; /* Aliniază butoanele la dreapta */
+}
+
+/* Stil de bază pentru butoane */
+.input-bar button {
+  padding: 10px 20px;
+  border: none; /* Fără bordură */
+  border-radius: 5px;
+  background-color: #007bff; /* Albastru primar */
+  color: white; /* Text alb */
+  font-size: 1em;
+  cursor: pointer; /* Cursor de tip pointer la hover */
+  transition: background-color 0.3s ease; /* Tranziție lină la hover */
+}
+
+/* Stil pentru butoane la hover (când nu sunt dezactivate) */
+.input-bar button:hover:not(:disabled) {
+  background-color: #0056b3; /* Albastru mai închis la hover */
+}
+
+/* Stil pentru butoanele dezactivate */
+.input-bar button:disabled {
+  background-color: #cccccc; /* Gri, pentru a indica dezactivarea */
+  cursor: not-allowed; /* Cursor pentru elemente ne-interactibile */
+}
+
+/* Stil pentru elementele <strong> (bold) în mesajele asistentului, pentru a le scoate în evidență */
+.assistant-message strong {
+  color: #0056b3; /* O culoare care contrastează bine cu fundalul mesajului */
+}

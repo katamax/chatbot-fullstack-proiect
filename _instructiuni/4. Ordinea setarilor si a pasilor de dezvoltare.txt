@@ -1,0 +1,87 @@
+4. Ordinea Setărilor și Pașilor de Dezvoltare
+
+4.1. Pregătire Locală
+ 1. Creează structura de directoare: Asigură-te că ai directoarele backend și frontend în directorul rădăcină al proiectului 
+ tău.
+ 2. Instalează Node.js (LTS Version): Descarcă și instalează ultima versiune LTS (Long Term Support) de pe nodejs.org. 
+ Foarte important: Dezinstalează orice versiune existentă (ex: v22.x.x) înainte de a instala o versiune LTS (ex: v20.x.x). 
+ Asigură-te că bifezi "Add to PATH" în timpul instalării. Restartează computerul după instalare.
+   * Verifică: node -v și npm -v în terminal.
+ 3. Instalează Python (3.8+): Asigură-te că ai Python 3.8 sau o versiune mai nouă instalată.
+ 4. Configurează VS Code:
+   * Instalează extensiile: Python (ms-python.python), Pylance (ms-python.vscode-pylance), ESLint, Prettier.
+   * Deschide folderul rădăcină al proiectului în VS Code (folderul care conține backend și frontend).
+
+4.2. Setup Backend Local
+ 1. Creează fișierul .env: În directorul backend, creează un fișier numit .env și adaugă:
+            OPENAI_API_KEY="sk-YOUR_OPENAI_API_KEY_HERE"
+
+ 2. Creează mediul virtual Python:
+    * Deschide un terminal nou în VS Code (`Ctrl+``).
+    * Navighează la directorul backend: cd backend
+    * Creează mediul virtual: python -m venv venv
+
+ 3. Activează mediul virtual:
+    * Windows (PowerShell): .\venv\Scripts\Activate.ps1
+    * macOS / Linux (Bash / Zsh): source venv/bin/activate
+    * Verifică: Vei vedea (venv) înaintea promptului.
+
+ 4. Instalează dependențele Python:
+    * Copiaza conținutul de la 3.1.1. backend/requirements.txt în fișierul tău.
+    * Rulează: pip install -r requirements.txt
+
+ 5. Instalează driverele Playwright:
+                playwright install
+
+ 6. Copiaza codul pentru scripturile Python:
+    * Copiaza conținutul de la 3.1.3. backend/playwright_automation.py în fișierul tău.
+    * Copiaza conținutul de la 3.1.4. backend/llm_utils.py în fișierul tău.
+    * Copiaza conținutul de la 3.1.5. backend/chatbot_logic.py în fișierul tău.
+    * Copiaza conținutul de la 3.1.6. backend/app.py în fișierul tău.
+    * Verifică importurile! Asigură-te că ai folosit importurile absolute (from chatbot_logic import ...) 
+      așa cum este indicat în cod.
+
+
+4.3. Setup Frontend Local
+
+ 1. Creează proiectul React:
+    * Deschide un nou terminal în VS Code (nu cel pentru backend).
+    * Navighează la directorul rădăcină al proiectului (folderul care conține backend și frontend).
+    * Rulează: npx create-react-app frontend
+
+ 2. Instalează dependențele Node.js:
+    * Navighează în directorul frontend: cd frontend
+    * Șterge node_modules și package-lock.json (dacă există și ai avut probleme anterioare):
+    * Remove-Item -Recurse -Force node_modules ; Remove-Item package-lock.json
+    * Curăță cache-ul npm: npm cache clean --force
+    * Rulează: npm install
+
+ 3. Copiaza codul pentru scripturile React:
+    * Copiaza conținutul de la 3.2.2. frontend/src/api.js în fișierul tău. (Lasă API_BASE_URL la http://localhost:5000 
+      pentru testare locală).
+    * Copiaza conținutul de la 3.2.3. frontend/src/ChatWindow.js în fișierul tău.
+    * Copiaza conținutul de la 3.2.4. frontend/src/Message.js în fișierul tău.
+    * Copiaza conținutul de la 3.2.5. frontend/src/InputBar.js în fișierul tău.
+    * Copiaza conținutul de la 3.2.6. frontend/src/StatusBar.js în fișierul tău.
+    * Copiaza conținutul de la 3.2.7. frontend/src/App.js în fișierul tău.
+    * Copiaza conținutul de la 3.2.8. frontend/src/App.css în fișierul tău.
+    * Copiaza conținutul de la 3.2.9. frontend/src/index.js în fișierul tău.
+    * Corectează package.json: Asigură-te că linia "react-scripts": "^0.0.0", din frontend/package.json este modificată 
+      la "react-scripts": "5.0.1",.
+
+
+4.4. Rularea Proiectului Local
+ 1. Pornește Backend-ul:
+    * În terminalul VS Code unde ai activat mediul virtual pentru backend (ești în backend/):
+                uvicorn app:app --reload --host 0.0.0.0 --port 5000
+    * Serverul va porni și va afișa mesaje INFO. Nu închide acest terminal.
+
+ 2. Pornește Frontend-ul:
+    * În celălalt terminal VS Code (cel în care ai instalat dependențele frontend și ești în frontend/):
+                npm start
+    
+    * Acest lucru va deschide aplicația React în browser (de obicei la http://localhost:3000).
+
+ 3. Testează Chatbot-ul: Interacționează liber, furnizează informații despre companie, servicii, categorie. 
+    Observă cum backend-ul extrage datele și cum chatbot-ul cere informațiile lipsă. După confirmare, ar trebui 
+    să vezi o fereastră de browser Playwright deschizându-se și completând automat formularul.

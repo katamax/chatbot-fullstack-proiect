@@ -1,0 +1,18 @@
+# Frontend (React) specific ignores
+
+# Ignoră folderul masiv de dependențe
+/node_modules
+
+# Ignoră folderul de build (se regenerează)
+/build
+
+# Ignoră fișierele .env locale specifice create-react-app
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignoră log-urile npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

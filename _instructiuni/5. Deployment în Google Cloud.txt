@@ -1,0 +1,121 @@
+5. Deployment în Google Cloud
+
+Acest proces necesită un cont Google Cloud și configurarea gcloud CLI.
+
+5.1. Pregătiri Google Cloud
+ 1. Creează un Proiect Google Cloud: Accesează Google Cloud Console și creează un proiect nou. Notează ID-ul proiectului tău.
+ 2. Activează API-urile necesare: În Cloud Console, mergi la "APIs & Services" -> "Enabled APIs & services" și asigură-te 
+    că următoarele API-uri sunt activate:
+    * Cloud Run API
+    * Cloud Build API
+    * Cloud Storage API
+    * (Opțional) Firebase Hosting API (dacă alegi Firebase pentru frontend)
+    * (Opțional) Secret Manager API (dacă vrei să stochezi cheia OpenAI aici)
+
+ 3. Instalează și configurează gcloud CLI: Urmează instrucțiunile de pe Google Cloud SDK. Apoi:
+    * Autentifică-te: gcloud auth login
+    * Setează proiectul implicit: gcloud config set project YOUR_PROJECT_ID (înlocuiește)
+    * Setează o regiune implicită (alege una apropiată de tine sau de utilizatori): gcloud config set run/region 
+      YOUR_REGION (ex: europe-west1, us-central1).
+
+
+5.2. Deployment Backend (Cloud Run)
+
+ 1. Configurează Dockerfile: Asigură-te că fișierul 3.1.7. backend/Dockerfile este în directorul backend.
+
+ 2. Construiește Imaginea Docker cu Cloud Build:
+    * Deschide terminalul și navighează în directorul backend.
+    * Rulează comanda pentru a construi imaginea și a o uploada în Google Container Registry (GCR):
+                gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/chatbot-backend .
+      (Asigură-te că . de la final este prezent, indică directorul curent.)
+
+ 3. Lanseaza Serviciul în Cloud Run:
+    * În același terminal (asigură-te că ești în backend):
+                gcloud run deploy chatbot-backend \
+                 --image gcr.io/YOUR_PROJECT_ID/chatbot-backend \
+                 --platform managed \
+                 --region YOUR_REGION \
+                 --allow-unauthenticated \
+                 --set-env-vars OPENAI_API_KEY="sk-YOUR_OPENAI_KEY_HERE" \
+                 --min-instances 0 \
+                 --max-instances 1 \
+                 --cpu 2 \
+                 --memory 4Gi \
+                 --timeout 300
+
+    * Explicația argumentelor:
+        * chatbot-backend: Numele serviciului Cloud Run.
+        * --image: Imaginea Docker pe care o deployezi.
+        * --platform managed: Utilizează serviciul Cloud Run gestionat (serverless).
+        * --region YOUR_REGION: Regiunea Cloud Run (ex: europe-west1).
+        * --allow-unauthenticated: Permite acces public (necesar pentru ca frontend-ul să poată apela API-ul).
+        * --set-env-vars OPENAI_API_KEY="...": Setează variabila de mediu direct. Înlocuiește cu cheia ta reală. 
+            (Pentru producție, folosește Secret Manager pentru securitate sporită).
+        * --min-instances 0: Scalează la zero instanțe când nu este trafic, pentru a reduce costurile.
+        * --max-instances 1: Limitează la o singură instanță pentru a controla costurile în timpul fazei de testare 
+            (Playwright consumă resurse). Poți crește ulterior dacă ai nevoie de mai multă concurență.
+        * --cpu 2: Alocă 2 CPU-uri virtuale. Automatizarea Playwright este intensivă CPU.
+        * --memory 4Gi: Alocă 4 Gigabytes de RAM. Browserele Playwright pot consuma multă memorie.
+        * --timeout 300: Setează timeout-ul la 300 de secunde (5 minute). Automatizarea Playwright poate dura. 
+            Dacă depășește, mărește această valoare.
+    * După deployment, terminalul îți va afișa URL-ul public al serviciului Cloud Run. Notează-l! Arată ca 
+      https://chatbot-backend-abcdefgh-uc.a.run.app.
+
+
+5.3. Deployment Frontend (Google Cloud Storage sau Firebase Hosting)
+
+ 1. Build Aplicație React:
+    * Navighează în directorul frontend: cd frontend
+    * Rulează: npm run build
+    * Acest lucru va crea un director build/ care conține toate fișierele optimizate pentru producție.
+
+ 2. Actualizează frontend/src/api.js:
+    * Înainte de a deploya frontend-ul, modifică API_BASE_URL în frontend/src/api.js la URL-ul public al serviciului tău 
+      Cloud Run obținut anterior.
+    * Ex: const API_BASE_URL = 'https://chatbot-backend-abcdefgh-uc.a.run.app';
+    * Rulează din nou npm run build după această modificare!
+
+ 3. Alege o metodă de Deployment:
+
+    OPTIUNEA A: Google Cloud Storage (Simplu)
+
+    * Creează un bucket GCS:
+                gsutil mb gs://your-unique-frontend-bucket-name
+      (Numele bucket-ului trebuie să fie unic global!)
+
+    * Configurează-l pentru hosting static și fă-l public:
+                gsutil web set -m index.html -e index.html gs://your-unique-frontend-bucket-name
+                gsutil iam ch allUsers:objectViewer gs://your-unique-frontend-bucket-name
+
+    * Uploadează fișierele:
+        * Navighează la directorul frontend/build (acolo unde sunt fișierele compilate).
+                cd build
+                gsutil cp -r . gs://your-unique-frontend-bucket-name
+
+    Sau, mai eficient pentru update-uri:
+    * Navighează la directorul frontend (părintele lui build):
+                gsutil rsync -r build/ gs://your-unique-frontend-bucket-name
+    
+    * URL-ul aplicației tale va fi https://storage.googleapis.com/your-unique-frontend-bucket-name/index.html 
+      sau https://your-unique-frontend-bucket-name.storage.googleapis.com.
+
+    OPTIUNEA B: Firebase Hosting (Recomandat pentru CDN, SSL, domeniu custom)
+    * Instalează Firebase CLI global:
+                npm install -g firebase-tools
+
+    * Autentifica-te:
+                firebase login
+
+    * Inițializează Firebase în directorul frontend:
+                cd frontend
+                firebase init hosting
+        * Urmează pașii: Alege "Use an existing project", selectează proiectul tău GCP.
+        * What do you want to use as your public directory? Scrie build (acesta este directorul de output al React).
+        * Configure as a single-page app (rewrite all urls to /index.html)? Yes.
+        * Set up automatic builds and deploys with GitHub? No (sau Yes dacă ai GitHub).
+
+    * Lanseaza:
+                firebase deploy --only hosting
+        
+    * Terminalul îți va oferi un "Hosting URL" (ex: https://your-project-id.web.app).
+    
