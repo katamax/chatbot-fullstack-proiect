@@ -33,6 +33,10 @@ def health_check():
     return {"status": "ok", "message": "Backend is running!"}
 
 # Configurăm CORS pentru a permite cereri de la orice origine.
+origins = [
+    "http://localhost:3000",                  # Pentru testare locală
+    "https://chatbot-fullstack.netlify.app"   # Pentru aplicația live
+]
 # În producție, poți restricționa la domeniul frontend-ului tău.
 app.add_middleware(
     CORSMiddleware,

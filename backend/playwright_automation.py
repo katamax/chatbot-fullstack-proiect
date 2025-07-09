@@ -92,7 +92,7 @@ def _perform_automation(collected_data: dict, openai_client: OpenAI) -> str:
             3. Identifica chackbox-urile aflate dupa 'Interesat de serviciile *' si bifeaza optiunile din {servicii}
             4. La campul 'Categoria întreprinderii *': da un singur click pentru a-l activa, scrii {categorie}, si imediat dupa aceea apasa tasta 'Enter pentru a finaliza selectia. Nu mai cere confirmarea si treci la pasul urmator.
             5. Identifica campul de input aflat dupa 'Ideile clientului - etapa SALES *' si introdu textul {idei_client} si treci la pasul urmator.
-            6. Click pe butonul 'Trimite'
+            6. Click pe butonul 'Trimite' fara a mai cere confirmarea
             """
         }
     ]
